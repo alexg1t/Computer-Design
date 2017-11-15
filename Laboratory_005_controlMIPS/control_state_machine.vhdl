@@ -1,4 +1,3 @@
-
 library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.std_logic_arith.all;
@@ -7,7 +6,7 @@ use IEEE.std_logic_arith.all;
 entity controlStateMachine is
   port (
 		clk: in	std_logic;
-		reset: in	std_logic;
+		reset: in std_logic;
 		opcode: in std_logic_vector(5 downto 0);
 
 		-- OUTPUTS:
@@ -55,6 +54,8 @@ begin
 						------------
 						when "001000" => -- ADDI instruction
 							state <= s8;
+						when others =>
+							null;
 					end case;
 					
 				when s2=>
@@ -63,6 +64,8 @@ begin
 							state <= s3; 
 						when "101011" => -- SW
 							state <= s5;
+						when others =>
+							null;
 					end case;
 					
 				when s3=>
@@ -82,7 +85,9 @@ begin
 
 				when s8=>
 					state <= s0; -- BACK TO s0
-
+			
+				when others =>
+					null;
 
 			end case;
 			
@@ -97,15 +102,15 @@ begin
 				RegDst <= '0';
 				ALUSrc <= '0';
 				MemtoReg <= '0';
-				RegWrite <= '1';
+				RegWrite <= '0';
 				MemRead <= '0';
-				MemWrite <= '1';
+				MemWrite <= '0';
 				Branch <= '0';
 				ALUOp <= "00";
 				Jump <= '0';
 				
 			when s1=>
-				ALUSrcA <= '0';
+				ALUSrc <= '0';
 				ALUOp <= "00";
 
 			when s2=>
@@ -116,7 +121,7 @@ begin
 				MemtoReg <= '1';
 				RegWrite <= '1';
 				MemRead <= '1';
-				PCWrite <= '1'
+				PCWrite <= '1';
 
 			when s4=>
 				Jump <= '1';
@@ -127,9 +132,9 @@ begin
 				PCWrite <= '1';
 
 			when s6=>
-				RegDst <= '1'
-				RegWrite <= '1'
-				ALUOp <= "00";
+				RegDst <= '1';
+				RegWrite <= '1';
+				ALUOp <= "10";
 				PCWrite <= '1';
 
 			when s7=>
@@ -138,11 +143,14 @@ begin
 				PCWrite <= '1';
 
 			when s8=>
-				RegDst <= '1';
+				RegDst <= '0';
 				RegWrite <= '1';
 				ALUSrc <= '1';
-				ALUOp <= "10";
+				ALUOp <= "00";
 				PCWrite <= '1';
+			
+			when others =>
+				null;
 		end case;
 	end process;
 
